@@ -1,0 +1,53 @@
+version: '3.5'
+services:
+  maverick-app:
+    depends_on:
+      maverick-db:
+        condition: service_healthy
+    container_name: maverick-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: maverick-app:latest
+    ports:
+      - '19999:19999'
+      - '5005:5005'
+    networks:
+      - app
+      - db
+    healthcheck:
+      test: "wget -qO- http://localhost:8080/actuator/health/ | grep UP || exit 1"
+      timeout: 30s
+      retries: 10
+  maverick-db:
+    container_name: maverick-db
+    image: mysql:8.0.32
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'maverick_db'
+      MYSQL_USER: 'maverickAdmin'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - ./maverick-db:/var/lib/mysql
+      - ./docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
+    networks:
+      - db
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 30s
+      retries: 10
+volumes:
+  maverick-db:
+  docker-entrypoint-initdb.d:
+networks:
+  app:
+    external: true
+    driver: bridge
+  db:
+    external: true
+    driver: bridge

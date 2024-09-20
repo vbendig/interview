@@ -1,0 +1,23 @@
+services:
+  config-server:
+    container_name: config-server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: config-server:latest
+    ports:
+      - '8888:8888'
+    networks:
+      - app
+    healthcheck:
+      test: "wget -qO- http://localhost:8080/actuator/health/ | grep UP || exit 1"
+      timeout: 30s
+      retries: 10
+    volumes:
+      - /Users/victor.bendig/dev/learning/appdemo/config-files:/configuration/
+volumes:
+  configuration:
+networks:
+  app:
+    external: true
+    driver: bridge

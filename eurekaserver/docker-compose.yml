@@ -1,0 +1,21 @@
+services:
+  eureka-server:
+    container_name: eureka-server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: eureka-server:latest
+    ports:
+      - '8761:8761'
+    expose:
+      - '8761'
+    networks:
+      - app
+    healthcheck:
+      test: "wget -qO- http://localhost:8080/actuator/health/ | grep UP || exit 1"
+      timeout: 30s
+      retries: 10
+networks:
+  app:
+    external: true
+    driver: bridge
