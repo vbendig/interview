@@ -58,32 +58,29 @@ public class MovieService {
     }
 
     public boolean MovieExists(Movie Movie) {
-//        QMovie qMovie = QMovie.Movie;
-//        BooleanBuilder builder = new BooleanBuilder();
-//        builder.and(qMovie.name.eq(Movie.getName()))
-//                        .and(qMovie.description.eq(Movie.getDescription()));
-//        return MovieRepository.count(builder) > 0;
-        return true;
+        QMovie qMovie = QMovie.movie;
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(qMovie.title.eq(Movie.getTitle()))
+                        .and(qMovie.imdbID.eq(Movie.getImdbID()));
+        return MovieRepository.count(builder) > 0;
     }
 
     public boolean MovieExists1(Movie Movie) {
         JPAQueryFactory factory = new JPAQueryFactory(entityManager);
-//        QMovie qMovie = QMovie.Movie;
-//        return factory
-//                .selectFrom(qMovie)
-//                .where(qMovie.title.eq(Movie.getImdbID()), qMovie.description.eq(Movie.getDescription()))
-//                .stream().findAny().isPresent();
-        return true;
+        QMovie qMovie = QMovie.movie;
+        return factory
+                .selectFrom(qMovie)
+                .where(qMovie.title.eq(Movie.getImdbID()), qMovie.title.eq(Movie.getTitle()))
+                .stream().findAny().isPresent();
 
     }
 
     public boolean MovieExists2(Movie Movie) {
-//        QMovie qMovie = QMovie.Movie;
-//        BooleanBuilder predicate = new BooleanBuilder();
-//        predicate.and(qMovie.name.eq(Movie.getName()))
-//                .and(qMovie.description.eq(Movie.getDescription()));
-//        return MovieRepository.exists(predicate);
-        return true;
+        QMovie qMovie = QMovie.movie;
+        BooleanBuilder predicate = new BooleanBuilder();
+        predicate.and(qMovie.title.eq(Movie.getTitle()))
+                .and(qMovie.imdbID.eq(Movie.getImdbID()));
+        return MovieRepository.exists(predicate);
     }
 
     public void deleteMovie(long MovieId) {
