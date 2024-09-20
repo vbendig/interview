@@ -1,4 +1,4 @@
-package com.gorillalogic.configserver;
+package com.vb.configserver;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
